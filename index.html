@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Дерево эпохи Н.С. Хрущева</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f9f6f0;
+            --trunk-color: #6b4423; /* Цвет ствола */
+            --root-color: #8b5a2b; /* Цвет корней */
+            --branch-color: #4caf50; /* Цвет листвы */
+            --text-main: #333;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Merriweather', serif;
+            text-align: center;
+        }
+
+        header {
+            background-color: var(--trunk-color);
+            color: white;
+            padding: 40px 20px;
+            margin-bottom: 50px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        header p {
+            text-align: center;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        /* Таймлайн-Дерево */
+        .tree-container {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Центральный ствол */
+        .tree-container::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            background-color: var(--trunk-color);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -4px;
+            border-radius: 4px;
+        }
+
+        .section-title {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            margin: 40px 0;
+        }
+
+        .section-title span {
+            background-color: var(--trunk-color);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 20px;
+            font-size: 1.5em;
+            font-family: 'Merriweather', serif;
+            font-weight: bold;
+        }
+
+        .section-roots span { background-color: var(--root-color); }
+        .section-branches span { background-color: var(--branch-color); }
+
+        .node {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+            box-sizing: border-box;
+        }
+
+        .node.left { left: 0; }
+        .node.right { left: 50%; }
+
+        /* Кружочки на стволе */
+        .node::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            right: -10px;
+            background-color: white;
+            border: 4px solid var(--trunk-color);
+            top: 20px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        .node.right::after {
+            left: -14px;
+        }
+
+        .node-content {
+            padding: 20px;
+            background-color: white;
+            position: relative;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .node-content:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Разноцветные рамки для разных частей дерева */
+        .roots-node .node-content { border-top: 5px solid var(--root-color); }
+        .trunk-node .node-content { border-top: 5px solid var(--trunk-color); }
+        .branch-node .node-content { border-top: 5px solid var(--branch-color); }
+
+        .node-content h3 {
+            margin-top: 0;
+            color: var(--trunk-color);
+            text-align: left;
+        }
+        
+        .branch-node h3 { color: var(--branch-color); }
+
+        .node-content ul {
+            padding-left: 20px;
+            margin: 0;
+        }
+
+        .node-content li {
+            margin-bottom: 8px;
+        }
+
+        img {
+            width: 100%;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            object-fit: cover;
+            max-height: 250px;
+        }
+
+        /* Адаптивность для телефонов */
+        @media screen and (max-width: 768px) {
+            .tree-container::after {
+                left: 31px;
+            }
+            .node {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            .node.right {
+                left: 0%;
+            }
+            .node.left::after, .node.right::after {
+                left: 17px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Древо Н.С. Хрущева</h1>
+        <p>Биографическая и политическая структура</p>
+    </header>
+
+    <div class="tree-container">
+
+        <div class="section-title section-roots"><span>Корни: Становление личности</span></div>
+        
+        <div class="node left roots-node">
+            <div class="node-content">
+                <img src="roots.jpg" alt="Молодой Хрущев">
+                <h3>Ранние годы и работа</h3>
+                <ul>
+                    <li>Родился в 1894 году в селе Калиновка.</li>
+                    <li>Работал пастухом, шахтером, заводчанином.</li>
+                    <li>Окончил три класса церковно-приходской школы.</li>
+                    <li>Личность: решительная, энергичная, упорная (холерик).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="node right roots-node">
+            <div class="node-content">
+                <h3>Партийная карьера</h3>
+                <ul>
+                    <li>Во время Гражданской войны вступил в партию большевиков, был политкомиссаром.</li>
+                    <li>Отучился на рабфаке, затем в Донецком индустриальном институте и Промышленной академии в Москве.</li>
+                    <li>Был секретарем МГК ВКП(б) и членом Политбюро.</li>
+                    <li>В годы ВОВ — член Военных советов фронтов, генерал-лейтенант (1943).</li>
+                    <li>Секретарь ЦК КПСС (с 1949). В 1953 г., после смерти И.В. Сталина, вступил в борьбу за власть.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-title"><span>Ствол: Приход к власти</span></div>
+
+        <div class="node left trunk-node">
+            <div class="node-content">
+                <img src="trunk.jpg" alt="Хрущев у власти">
+                <h3>Утверждение во главе государства</h3>
+                <ul>
+                    <li><strong>Арест Л.П. Берии (1953):</strong> Устранение главного конкурента в борьбе за власть при поддержке Г.К. Жукова.</li>
+                    <li><strong>Отставка Г.М. Маленкова (1955):</strong> Смещение Маленкова с поста Председателя Совета Министров СССР, окончательное закрепление лидерства Хрущева.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-title section-branches"><span>Крона: Ветви политики</span></div>
+
+        <div class="node right branch-node">
+            <div class="node-content">
+                <img src="agro.jpg" alt="Сельское хозяйство">
+                <h3>Ветвь Экономики (Сельское хозяйство)</h3>
+                <ul>
+                    <li>Освоение целины (1954).</li>
+                    <li>Кукурузная эпопея (1956-1964).</li>
+                    <li>Реорганизация МТС в РТС (1958).</li>
+                    <li>Кризис: массовый убой скота и начало закупок зерна за рубежом (1963).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="node left branch-node">
+            <div class="node-content">
+                <img src="industry.jpg" alt="Промышленность">
+                <h3>Ветвь Экономики (Промышленность)</h3>
+                <ul>
+                    <li>Открытие Обнинской АЭС — первой в мире (1954).</li>
+                    <li>Замена министерств совнархозами для децентрализации управления (1957).</li>
+                    <li>Развитие нефтехимического и машиностроительного комплексов.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="node right branch-node">
+            <div class="node-content">
+                <img src="foreign.jpg" alt="Внешняя политика">
+                <h3>Ветвь Внешней политики</h3>
+                <ul>
+                    <li><strong>Запад:</strong> Визиты в США, договоры о сокращении вооружений (1960-1963), Холодная война и Карибский кризис (1962).</li>
+                    <li><strong>Соцлагерь:</strong> Создание ОВД (1955), подавление восстаний в ГДР (1953) и Венгрии (1956), ухудшение отношений с Китаем.</li>
+                    <li><strong>Третий мир:</strong> Поддержка деколонизации (Египет, Куба).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="node left branch-node">
+            <div class="node-content">
+                <img src="destal.jpg" alt="Десталинизация">
+                <h3>Ветвь Десталинизации</h3>
+                <ul>
+                    <li>XX съезд КПСС (1956): секретный доклад Хрущева о культе личности Сталина.</li>
+                    <li>Реабилитация жертв репрессий и начало «Оттепели». Критика Сталина, но не самой советской системы.</li>
+                    <li>Вынос тела Сталина из Мавзолея (1961).</li>
+                    <li>Шок в обществе и ухудшение отношений с азиатскими соцстранами (КНР).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="node right branch-node">
+            <div class="node-content">
+                <img src="social.jpg" alt="Массовое жилье">
+                <h3>Ветвь Социальной политики</h3>
+                <ul>
+                    <li>Установление 7-часового рабочего дня и повышение зарплат (1956).</li>
+                    <li>Старт массового жилищного строительства («хрущевки») (1957).</li>
+                    <li>Введение пенсий для колхозников (1964).</li>
+                    <li>Общее улучшение материального положения населения.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="node left branch-node">
+            <div class="node-content">
+                <h3>Ветвь Политических реформ</h3>
+                <ul>
+                    <li>Упразднение ГУЛАГа (1960), отделение КГБ от МВД (1954).</li>
+                    <li>Ослабление централизованной бюрократии, расширение прав союзных республик.</li>
+                    <li>Передача Крымской области из состава РСФСР в состав УССР (1954).</li>
+                    <li>XXI (1959) и XXII (1961) съезды КПСС — принятие программы построения коммунизма.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="node right branch-node">
+            <div class="node-content">
+                <img src="culture.jpg" alt="Наука и космос">
+                <h3>Ветвь Культуры и Науки</h3>
+                <ul>
+                    <li><strong>Наука:</strong> Триумф космонавтики (первый спутник — 1957, полет Гагарина — 1961).</li>
+                    <li><strong>Образование:</strong> Введение обязательного 8-летнего обучения, отмена платы за обучение в старших классах и вузах.</li>
+                    <li><strong>Культура:</strong> Относительная свобода слова (публикация Солженицына), но при этом сохранение цензуры и гонения на художников-авангардистов и писателей (дело Пастернака).</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
