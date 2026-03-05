@@ -3,178 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Дерево эпохи Н.С. Хрущева</title>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <title>Дерево эпохи Хрущева</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Lora:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #f9f6f0;
-            --trunk-color: #6b4423; /* Цвет ствола */
-            --root-color: #8b5a2b; /* Цвет корней */
-            --branch-color: #4caf50; /* Цвет листвы */
+            --bg-color: #f1f8e9; /* Очень светлый зеленый */
+            --trunk-color: #5d4037; /* Глубокий коричневый для ствола */
+            --root-color: #8d6e63; /* Коричневый посветлее для корней */
+            --leaf-color-1: #66bb6a; /* Светло-зеленый для листвы */
+            --leaf-color-2: #43a047; /* Более темный зеленый */
             --text-main: #333;
         }
 
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Lora', serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
             padding: 0;
-            line-height: 1.6;
-        }
-
-        h1, h2, h3 {
-            font-family: 'Merriweather', serif;
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         header {
-            background-color: var(--trunk-color);
+            background-color: #388e3c; /* Зеленый "лес" */
             color: white;
-            padding: 40px 20px;
-            margin-bottom: 50px;
+            width: 100%;
+            padding: 20px 0;
+            text-align: center;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
-        header h1 {
-            margin: 0;
-            font-size: 2.5em;
-        }
+        header h1 { font-family: 'Merriweather', serif; margin: 0; font-size: 2em; }
+        header p { margin: 5px 0; opacity: 0.9; }
 
-        header p {
-            text-align: center;
-            font-size: 1.2em;
-            opacity: 0.9;
-        }
-
-        /* Таймлайн-Дерево */
+        /* --- Контейнер Дерева --- */
         .tree-container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto;
             position: relative;
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px;
+            padding-bottom: 60px; /* Для корней */
         }
 
-        /* Центральный ствол */
-        .tree-container::after {
-            content: '';
-            position: absolute;
-            width: 8px;
+        /* --- Ствол --- */
+        .trunk {
+            width: 60px;
+            height: 100%;
             background-color: var(--trunk-color);
-            top: 0;
-            bottom: 0;
+            position: absolute;
             left: 50%;
-            margin-left: -4px;
-            border-radius: 4px;
+            transform: translateX(-50%);
+            top: 0;
+            border-radius: 30px; /* Плавные концы */
+            z-index: 1;
+            box-shadow: inset 10px 0 20px rgba(0,0,0,0.3); /* Тень внутри для объема */
+        }
+
+        /* --- Корни (внизу) --- */
+        .roots-container {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            z-index: 2;
+        }
+
+        .root-branch {
+            width: 45%;
+            height: 100px;
+            border: 15px solid var(--root-color);
+            border-bottom: none;
+            position: relative;
+        }
+        .root-branch.left { border-radius: 100px 0 0 0; }
+        .root-branch.right { border-radius: 0 100px 0 0; }
+
+        /* --- Разделы Дерева (Крона) --- */
+        .section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            position: relative;
+            z-index: 3;
+            margin-bottom: 120px; /* Отступ между "этажами" веток */
         }
 
         .section-title {
+            width: 100%;
             text-align: center;
-            position: relative;
-            z-index: 2;
-            margin: 40px 0;
-        }
-
-        .section-title span {
-            background-color: var(--trunk-color);
-            color: white;
-            padding: 10px 25px;
-            border-radius: 20px;
-            font-size: 1.5em;
             font-family: 'Merriweather', serif;
-            font-weight: bold;
+            font-size: 1.8em;
+            color: white;
+            background-color: var(--leaf-color-2);
+            padding: 10px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            margin-top: -60px; /* Наплыв на ствол */
         }
 
-        .section-roots span { background-color: var(--root-color); }
-        .section-branches span { background-color: var(--branch-color); }
-
-        .node {
-            padding: 10px 40px;
+        /* --- Нарисованные Ветви --- */
+        .branch {
+            width: 48%; /* Полширины */
             position: relative;
-            background-color: inherit;
-            width: 50%;
-            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .node.left { left: 0; }
-        .node.right { left: 50%; }
-
-        /* Кружочки на стволе */
-        .node::after {
+        .branch::before { /* Линия ветки */
             content: '';
             position: absolute;
-            width: 20px;
-            height: 20px;
-            right: -10px;
-            background-color: white;
-            border: 4px solid var(--trunk-color);
-            top: 20px;
+            border: 10px solid var(--trunk-color);
             border-radius: 50%;
-            z-index: 1;
-        }
-        .node.right::after {
-            left: -14px;
+            width: 100px;
+            height: 100px;
+            z-index: -1;
         }
 
-        .node-content {
+        .branch.left { padding-right: 30px; }
+        .branch.right { padding-left: 30px; }
+
+        .branch.left::before {
+            border-right: none;
+            border-bottom: none;
+            left: 50%;
+            bottom: 60%;
+            transform: translateX(-5px);
+        }
+        .branch.right::before {
+            border-left: none;
+            border-bottom: none;
+            right: 50%;
+            bottom: 60%;
+            transform: translateX(5px);
+        }
+
+        /* --- Листва-Карточки --- */
+        .leaf-card {
+            background: linear-gradient(135deg, var(--leaf-color-1), var(--leaf-color-2));
+            color: white;
             padding: 20px;
-            background-color: white;
-            position: relative;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-radius: 50px 10px 50px 10px; /* Асимметричная форма листа */
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            margin-bottom: 20px;
+            max-width: 400px;
             transition: transform 0.3s ease;
         }
 
-        .node-content:hover {
-            transform: translateY(-5px);
-        }
+        .leaf-card:hover { transform: scale(1.05); }
 
-        /* Разноцветные рамки для разных частей дерева */
-        .roots-node .node-content { border-top: 5px solid var(--root-color); }
-        .trunk-node .node-content { border-top: 5px solid var(--trunk-color); }
-        .branch-node .node-content { border-top: 5px solid var(--branch-color); }
-
-        .node-content h3 {
+        .leaf-card h3 {
+            font-family: 'Merriweather', serif;
             margin-top: 0;
-            color: var(--trunk-color);
-            text-align: left;
-        }
-        
-        .branch-node h3 { color: var(--branch-color); }
-
-        .node-content ul {
-            padding-left: 20px;
-            margin: 0;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 10px;
         }
 
-        .node-content li {
-            margin-bottom: 8px;
-        }
+        .leaf-card ul { padding-left: 20px; margin: 0; }
+        .leaf-card li { margin-bottom: 8px; }
 
-        img {
+        .leaf-card img {
             width: 100%;
-            border-radius: 5px;
-            margin-bottom: 15px;
+            max-height: 200px;
             object-fit: cover;
-            max-height: 250px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 3px solid white;
         }
 
-        /* Адаптивность для телефонов */
+        /* --- Ствол (для раздела "Ствол") --- */
+        .trunk-node {
+            width: 80%;
+            max-width: 600px;
+            background-color: var(--trunk-color);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: -80px auto 40px; /* Чтобы "встраивался" в ствол */
+            position: relative;
+            z-index: 4;
+            text-align: center;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        .trunk-node img {
+            max-width: 250px;
+            border-radius: 50%;
+            border: 5px solid white;
+            margin-bottom: 15px;
+        }
+
+        /* --- Адаптивность для телефонов --- */
         @media screen and (max-width: 768px) {
-            .tree-container::after {
-                left: 31px;
-            }
-            .node {
-                width: 100%;
-                padding-left: 70px;
-                padding-right: 25px;
-            }
-            .node.right {
-                left: 0%;
-            }
-            .node.left::after, .node.right::after {
-                left: 17px;
-            }
+            .trunk { width: 30px; }
+            .section-title { font-size: 1.3em; }
+            .branch { width: 100%; padding: 0 !important; }
+            .branch::before { display: none; } /* Убираем ветки на мобильных */
+            .leaf-card { border-radius: 20px; max-width: 100%; }
+            .root-branch { display: none; }
         }
     </style>
 </head>
@@ -182,139 +214,134 @@
 
     <header>
         <h1>Древо Н.С. Хрущева</h1>
-        <p>Биографическая и политическая структура</p>
+        <p>Политическая и биографическая структура</p>
     </header>
 
     <div class="tree-container">
 
-        <div class="section-title section-roots"><span>Корни: Становление личности</span></div>
+        <div class="trunk"></div>
+
+        <div class="section">
+            <div class="section-title">Ветви: Экономика</div>
+            
+            <div class="branch left">
+                <div class="leaf-card">
+                    <img src="https://placehold.co/600x400/43a047/FFF?text=Фото:+Сельское+хозяйство" alt="Сельское хозяйство">
+                    <h3>Сельское хозяйство</h3>
+                    <ul>
+                        <li>Освоение целины (1954).</li>
+                        <li>Кукурузная эпопея (1956-1964).</li>
+                        <li>Реорганизация МТС в РТС (1958).</li>
+                        <li>Кризис: массовый убой скота, закупка зерна (1963).</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="branch right">
+                <div class="leaf-card">
+                    <img src="https://placehold.co/600x400/43a047/FFF?text=Фото:+Промышленность" alt="Промышленность">
+                    <h3>Промышленность</h3>
+                    <ul>
+                        <li>Создание совнархозов (1957).</li>
+                        <li>Развитие энергетики: открытие Обнинской АЭС (1954).</li>
+                        <li>Развитие космонавтики: запуск спутника (1957) и человека в космос (1961).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="branch left">
+                <div class="leaf-card">
+                    <img src="https://placehold.co/600x400/43a047/FFF?text=Фото:+Внешняя+политика" alt="Внешняя политика">
+                    <h3>Внешняя политика</h3>
+                    <ul>
+                        <li><strong>Запад:</strong> Визиты в США, пакты о сокращении вооружений (1960-1963), Карибский кризис (1962).</li>
+                        <li><strong>Соцстраны:</strong> Создание ОВД (1955), подавление протестов в ГДР (1953) и Венгрии (1956).</li>
+                        <li><strong>Третий мир:</strong> Поддержка деколонизации (Египет, Куба).</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="branch right">
+                <div class="leaf-card">
+                    <img src="https://placehold.co/600x400/43a047/FFF?text=Фото:+Десталинизация" alt="Десталинизация">
+                    <h3>Десталинизация</h3>
+                    <ul>
+                        <li>XX съезд КПСС: доклад о культе личности Сталина (1956).</li>
+                        <li>Реабилитация и "Оттепель", критика Сталина, но не режима.</li>
+                        <li>Вынос тела Сталина из Мавзолея (1961).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Ветви: Реформы</div>
+            
+            <div class="branch left">
+                <div class="leaf-card">
+                    <img src="https://placehold.co/600x400/43a047/FFF?text=Фото:+Жилищное+строительство" alt="Соц. политика">
+                    <h3>Социальная политика</h3>
+                    <ul>
+                        <li>Массовое жилищное строительство (1957).</li>
+                        <li>Установление 7-часового рабочего дня (1956).</li>
+                        <li>Повышение зарплат (1956) и введение пенсий колхозникам (1964).</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="branch right">
+                <div class="leaf-card">
+                    <h3>Политические реформы</h3>
+                    <ul>
+                        <li>Ослабление централизованной бюрократии, автономия союзных республик.</li>
+                        <li>Передача Крыма Украине (1954).</li>
+                        <li>Упразднение ГУЛАГа (1960), отделение КГБ от МВД (1954).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
         
-        <div class="node left roots-node">
-            <div class="node-content">
-                <img src="roots.jpg" alt="Молодой Хрущев">
-                <h3>Ранние годы и работа</h3>
-                <ul>
-                    <li>Родился в 1894 году в селе Калиновка.</li>
-                    <li>Работал пастухом, шахтером, заводчанином.</li>
-                    <li>Окончил три класса церковно-приходской школы.</li>
-                    <li>Личность: решительная, энергичная, упорная (холерик).</li>
-                </ul>
+        <div class="trunk-node">
+            <img src="https://placehold.co/600x600/5d4037/FFF?text=Портрет" alt="Н.С. Хрущев">
+            <h2>Ствол: Борьба за власть</h2>
+            <ul>
+                <li><strong>Арест Л.П. Берии (1953)</strong></li>
+                <li><strong>Отставка Г.М. Маленкова (1955)</strong></li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <div class="section-title section-roots">Корни: Становление личности</div>
+            
+            <div class="branch left">
+                <div class="leaf-card" style="background: linear-gradient(135deg, var(--root-color), #5d4037);">
+                    <h3>Происхождение</h3>
+                    <ul>
+                        <li>Родился в 1894 году в селе Калиновка.</li>
+                        <li>Работал пастухом, шахтером, заводчанином.</li>
+                        <li>Закончил три класса церковно-приходской школы.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="branch right">
+                <div class="leaf-card" style="background: linear-gradient(135deg, var(--root-color), #5d4037);">
+                    <h3>Партийный путь</h3>
+                    <ul>
+                        <li>В Гражданскую войну вступил в большевики, был политкомиссаром.</li>
+                        <li>Учился на рабфаке, в Донецком институте, Пром. академии.</li>
+                        <li>Был секретарем МГК ВКП(б) и членом Политбюро.</li>
+                        <li>Холерик: личность решительная, энергичная.</li>
+                    </ul>
+                </div>
             </div>
         </div>
 
-        <div class="node right roots-node">
-            <div class="node-content">
-                <h3>Партийная карьера</h3>
-                <ul>
-                    <li>Во время Гражданской войны вступил в партию большевиков, был политкомиссаром.</li>
-                    <li>Отучился на рабфаке, затем в Донецком индустриальном институте и Промышленной академии в Москве.</li>
-                    <li>Был секретарем МГК ВКП(б) и членом Политбюро.</li>
-                    <li>В годы ВОВ — член Военных советов фронтов, генерал-лейтенант (1943).</li>
-                    <li>Секретарь ЦК КПСС (с 1949). В 1953 г., после смерти И.В. Сталина, вступил в борьбу за власть.</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="section-title"><span>Ствол: Приход к власти</span></div>
-
-        <div class="node left trunk-node">
-            <div class="node-content">
-                <img src="trunk.jpg" alt="Хрущев у власти">
-                <h3>Утверждение во главе государства</h3>
-                <ul>
-                    <li><strong>Арест Л.П. Берии (1953):</strong> Устранение главного конкурента в борьбе за власть при поддержке Г.К. Жукова.</li>
-                    <li><strong>Отставка Г.М. Маленкова (1955):</strong> Смещение Маленкова с поста Председателя Совета Министров СССР, окончательное закрепление лидерства Хрущева.</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="section-title section-branches"><span>Крона: Ветви политики</span></div>
-
-        <div class="node right branch-node">
-            <div class="node-content">
-                <img src="agro.jpg" alt="Сельское хозяйство">
-                <h3>Ветвь Экономики (Сельское хозяйство)</h3>
-                <ul>
-                    <li>Освоение целины (1954).</li>
-                    <li>Кукурузная эпопея (1956-1964).</li>
-                    <li>Реорганизация МТС в РТС (1958).</li>
-                    <li>Кризис: массовый убой скота и начало закупок зерна за рубежом (1963).</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="node left branch-node">
-            <div class="node-content">
-                <img src="industry.jpg" alt="Промышленность">
-                <h3>Ветвь Экономики (Промышленность)</h3>
-                <ul>
-                    <li>Открытие Обнинской АЭС — первой в мире (1954).</li>
-                    <li>Замена министерств совнархозами для децентрализации управления (1957).</li>
-                    <li>Развитие нефтехимического и машиностроительного комплексов.</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="node right branch-node">
-            <div class="node-content">
-                <img src="foreign.jpg" alt="Внешняя политика">
-                <h3>Ветвь Внешней политики</h3>
-                <ul>
-                    <li><strong>Запад:</strong> Визиты в США, договоры о сокращении вооружений (1960-1963), Холодная война и Карибский кризис (1962).</li>
-                    <li><strong>Соцлагерь:</strong> Создание ОВД (1955), подавление восстаний в ГДР (1953) и Венгрии (1956), ухудшение отношений с Китаем.</li>
-                    <li><strong>Третий мир:</strong> Поддержка деколонизации (Египет, Куба).</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="node left branch-node">
-            <div class="node-content">
-                <img src="destal.jpg" alt="Десталинизация">
-                <h3>Ветвь Десталинизации</h3>
-                <ul>
-                    <li>XX съезд КПСС (1956): секретный доклад Хрущева о культе личности Сталина.</li>
-                    <li>Реабилитация жертв репрессий и начало «Оттепели». Критика Сталина, но не самой советской системы.</li>
-                    <li>Вынос тела Сталина из Мавзолея (1961).</li>
-                    <li>Шок в обществе и ухудшение отношений с азиатскими соцстранами (КНР).</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="node right branch-node">
-            <div class="node-content">
-                <img src="social.jpg" alt="Массовое жилье">
-                <h3>Ветвь Социальной политики</h3>
-                <ul>
-                    <li>Установление 7-часового рабочего дня и повышение зарплат (1956).</li>
-                    <li>Старт массового жилищного строительства («хрущевки») (1957).</li>
-                    <li>Введение пенсий для колхозников (1964).</li>
-                    <li>Общее улучшение материального положения населения.</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="node left branch-node">
-            <div class="node-content">
-                <h3>Ветвь Политических реформ</h3>
-                <ul>
-                    <li>Упразднение ГУЛАГа (1960), отделение КГБ от МВД (1954).</li>
-                    <li>Ослабление централизованной бюрократии, расширение прав союзных республик.</li>
-                    <li>Передача Крымской области из состава РСФСР в состав УССР (1954).</li>
-                    <li>XXI (1959) и XXII (1961) съезды КПСС — принятие программы построения коммунизма.</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="node right branch-node">
-            <div class="node-content">
-                <img src="culture.jpg" alt="Наука и космос">
-                <h3>Ветвь Культуры и Науки</h3>
-                <ul>
-                    <li><strong>Наука:</strong> Триумф космонавтики (первый спутник — 1957, полет Гагарина — 1961).</li>
-                    <li><strong>Образование:</strong> Введение обязательного 8-летнего обучения, отмена платы за обучение в старших классах и вузах.</li>
-                    <li><strong>Культура:</strong> Относительная свобода слова (публикация Солженицына), но при этом сохранение цензуры и гонения на художников-авангардистов и писателей (дело Пастернака).</li>
-                </ul>
-            </div>
+        <div class="roots-container">
+            <div class="root-branch left"></div>
+            <div class="root-branch right"></div>
         </div>
 
     </div>
